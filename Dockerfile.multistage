@@ -1,0 +1,31 @@
+# syntax=docker/dockerfile:1
+
+##
+## Build
+##
+FROM golang:1.16-buster AS build
+
+WORKDIR /app
+
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod download
+
+COPY *.go ./
+
+RUN go build -o /docker-go-server-ping
+
+##
+## Deploy
+##
+FROM scratch
+
+WORKDIR /
+
+COPY --from=build /docker-go-server-ping /docker-go-server-ping
+
+EXPOSE 8080
+
+USER nonroot:nonroot
+
+ENTRYPOINT ["/docker-go-server-ping"]
