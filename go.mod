@@ -1,4 +1,4 @@
-module main
+module github.com/nodejh/docker-go-server-ping
 
 go 1.16
 
