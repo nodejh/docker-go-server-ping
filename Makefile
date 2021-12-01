@@ -1,12 +1,13 @@
-# Go parameters
+APP=docker-go-server-ping
 
-all: test build
+all: clean test build-docker-multistage
 
 test:
+	go test -v *.go
 
-
-run:
-	go run *.go
+run: clean
+	go build -o ${APP}
+	./${APP}
 
 deps:
 	go mod download
@@ -15,4 +16,7 @@ clean:
 	go clean
 
 build-docker:
-	docker build -t docker-go-server-ping:multistage -f Dockerfile.multistage .
+	docker build -t ${APP}:latest -f Dockerfile .
+
+build-docker-multistage:
+	docker build -t ${APP}:multistage -f Dockerfile.multistage .
